@@ -13,12 +13,16 @@ class UploadController extends Controller
             'upload-content' => 'required|max:15000|file'
         ]);
         
+        $upload = new Upload();
+        $upload->name = $request->input( 'upload-name' );
+        $upload->content = $request->input( 'upload-content' );
         
-        DB::table( 'uploads' )->insert([
-            'id'   => null,
-            'name' => $request->input( 'upload-name' ),
-            'content' => $request->input( 'upload-content' ),
-            'date-time' => date( 'Y-m-d h:i:sa' )
-        ]);
+        $upload->save();
+
+        $upload->code = Hash::make( $upload->id );
+
+        $upload->save();
+
+        return view( 'show-upload', [ 'upload' => $upload ] );
     }
 }

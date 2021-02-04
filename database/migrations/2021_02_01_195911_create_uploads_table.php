@@ -21,6 +21,7 @@ class CreateUploadsTable extends Migration
             $table->binary( 'content' );
             $table->string( 'mime' );
             $table->string( 'extension' );
+            $table->text( 'code' );
             $table->timestamps();
         });
 
