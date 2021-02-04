@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <p>this is the cdn: /cdn/content/{{ $upload->content }}/</p>
-    for view the file <a href="cdn/content/{{ $upload->content }}/">Go</a>
+    <p>this is the cdn:  {{  }} </p>
+    for view the file <a href="/cdn/{{ $upload->code }}">Go</a>
 </body>
 </html>

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\UploadController;
-use App\Http\Resources\Upload as UploadResource;
+use App\Models\Upload as UploadModel;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,16 +20,18 @@ Route::get('/', function () {
 });
 
 Route::get( '/new-file', function(){
-    view( 'upload' );
+    return view( 'new-file' );
 } );
+
+Route::get( '/show-upload', function(){
+    return view( 'show-upload' );
+} );
+
+
 
 Route::post( '/upload', [ UploadController::class, 'upload' ] )->name( 'upload' );
 
 Route::get( '/cdn/{resource}', function( $resource ){
-    return UploadResource::where( 'code', $resource );
-} );
-
-Route::get( '/cdn/content/{code}', function( $code ){
-    $upload = Upload::where( 'code', $code );
-    return view( 'file', [ 'upload' => $upload ] );
+    $upload =  UploadModel::where( 'code', $resource );
+    return view( 'cdn', [ 'upload' => $upload ] );
 } );
