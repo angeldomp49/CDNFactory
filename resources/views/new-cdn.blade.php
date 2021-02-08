@@ -6,7 +6,7 @@
     <div class="container">
         <div class="empty-space h-5em"></div>
         <div class="form-container col-8 offset-2">
-            <form action="{{ route( 'upload' ) }}" method="post" enctype="multipart/form-data" >
+            <form action="{{ route( 'new-cdn' ) }}" method="post" enctype="multipart/form-data" >
                 @csrf 
                 <div class="form-outline mb-4">
                     <input class="form-control" type="text" name="upload-name" id="upload-name">

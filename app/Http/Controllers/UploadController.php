@@ -23,7 +23,7 @@ class UploadController extends Controller
     public $code;
 
     public function newCDN( Request $request ){
-        $this->$request = $request;
+        $this->request = $request;
         $this->validateUpload();
         $this->extractFileData();
         $this->fillMetaData();
@@ -39,7 +39,7 @@ class UploadController extends Controller
     }
 
     public function extractFileData(){
-        $fileInfo = $request->file( 'upload-content' );
+        $fileInfo = $this->request->file( 'upload-content' );
         $fileObject = $fileInfo->openFile();
 
         $this->fileName = $fileInfo->getFileName();
@@ -72,6 +72,15 @@ class UploadController extends Controller
 
     public function redirectToFinish(){
         return redirect()->route( 'show-cdn' );
+    }
+
+    public function handleQueryExceptions(){
+        try{
+            $this->createModel();
+        }
+        catch( QueryException $qe ){
+            echo( 'query Exception' );
+        }
     }
 
 }
