@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Upload as UploadModel;
+
 class DownloadController extends Controller
 {
     public $idEncoded;
@@ -15,7 +17,7 @@ class DownloadController extends Controller
         $this->decodeId();
         $this->checkExistsModel();
         $this->putContent();
-        $this->redirectToFinish();
+        return $this->redirectToFinish();
     }
 
     public function decodeId(){

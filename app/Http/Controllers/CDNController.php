@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Upload as UploadModel;
+
 class CDNController extends Controller
 {
     public $idEncoded;
@@ -16,7 +18,7 @@ class CDNController extends Controller
         $this->decodeId();
         $this->checkExistsModel();
         $this->generateRoute();
-        $this->redirectToFinish();
+        return $this->redirectToFinish();
     }
 
     public function decodeId(){
@@ -43,12 +45,12 @@ class CDNController extends Controller
     }
 
     public function generateRoute(){
-        $this->route = url( '/download/{$this->idEncoded}' ); 
+        $this->route = url( "/download/{$this->idEncoded}" ); 
     }
 
     public function redirectToFinish(){
         if( $this->isModel ){
-            return view( 'sho-cdn', [ 'route' => $this->route ] );
+            return view( 'show-cdn', [ 'route' => $this->route ] );
         }
         else{
             return view( 'not-found-cdn' );

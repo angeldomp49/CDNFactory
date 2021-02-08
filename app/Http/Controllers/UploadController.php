@@ -22,6 +22,8 @@ class UploadController extends Controller
     public $extension;
     public $code;
 
+    public $redirectTo;
+
     public function newCDN( Request $request ){
         $this->request = $request;
         $this->validateUpload();
@@ -29,11 +31,11 @@ class UploadController extends Controller
         $this->fillMetaData();
         $this->createModel();
         return $this->redirectToFinish();
+        
     }
 
     public function validateUpload(){
         $validated = $this->request->validate([
-            'upload-name' => 'alpha_num|required',
             'upload-content' => 'required|max:15000|file'
         ]);
     }
@@ -42,16 +44,16 @@ class UploadController extends Controller
         $fileInfo = $this->request->file( 'upload-content' );
         $fileObject = $fileInfo->openFile();
 
-        $this->fileName = $fileInfo->getFileName();
+        $this->fileName = $fileInfo->getFilename();
         $this->fileSize = $fileInfo->getSize();
-        $this->fileContent = $fileObject->fread( $this->fileSize );
+        $this->fileContent = $fileObject->fread( 10000000 );
     }
 
     public function fillMetaData(){
         $this->dateTime = date( 'Y-m-d h:i:s', time() );
         $this->mime = 'application/pdf';
         $this->extension = 'pdf';
-        $this->code = null;
+        $this->code = '';
     }
 
     public function createModel(){
@@ -68,19 +70,13 @@ class UploadController extends Controller
         $upload->code = base64_encode( $upload->id );
 
         $upload->save();
+
+        $this->code = $upload->code;
     }
 
     public function redirectToFinish(){
-        return redirect()->route( 'show-cdn' );
-    }
-
-    public function handleQueryExceptions(){
-        try{
-            $this->createModel();
-        }
-        catch( QueryException $qe ){
-            echo( 'query Exception' );
-        }
+        $this->redirectTo = url( "/show-cdn/{$this->code}" );
+        return redirect( $this->redirectTo );
     }
 
 }
