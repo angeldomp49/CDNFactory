@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\CDNController;
+use App\Http\Controllers\DownloadController;
+
 use App\Models\Upload as UploadModel;
 /*
 |--------------------------------------------------------------------------
@@ -19,19 +23,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get( '/new-file', function(){
-    return view( 'new-file' );
+
+
+Route::get( '/new-cdn', function(){
+    return view( 'new-cdn' );
 } );
-
-Route::get( '/show-upload', function(){
-    return view( 'show-upload' );
-} );
+Route::post( '/new-cdn', [ UploadController::class, 'newCDN' ])->name( 'new-cdn' );
 
 
+Route::get( '/show-cdn/{idEncoded}', [ CDNController::class, 'showCDN' ] );
 
-Route::post( '/upload', [ UploadController::class, 'upload' ] )->name( 'upload' );
+Route::get( '/download/{idEncoded}', [ DownloadController::class, 'download' ] );
 
-Route::get( '/cdn/{resource}', function( $resource ){
+Route::get( '/download/{resource}', function( $resource ){
     $upload =  UploadModel::where( 'code', $resource );
-    return view( 'cdn', [ 'upload' => $upload ] );
+    return view( 'download', [ 'upload' => $upload ] );
 } );
