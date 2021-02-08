@@ -46,7 +46,7 @@ class UploadController extends Controller
 
         $this->fileName = $fileInfo->getFilename();
         $this->fileSize = $fileInfo->getSize();
-        $this->fileContent = $fileObject->fread( 10000000 );
+        $this->fileContent = $fileObject->fread( $this->fileSize );
     }
 
     public function fillMetaData(){
