@@ -34,8 +34,3 @@ Route::post( '/new-cdn', [ UploadController::class, 'newCDN' ])->name( 'new-cdn'
 Route::get( '/show-cdn/{idEncoded}', [ CDNController::class, 'showCDN' ] );
 
 Route::get( '/download/{idEncoded}', [ DownloadController::class, 'download' ] );
-
-Route::get( '/download/{resource}', function( $resource ){
-    $upload =  UploadModel::where( 'code', $resource );
-    return view( 'download', [ 'upload' => $upload ] );
-} );

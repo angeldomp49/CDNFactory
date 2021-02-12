@@ -10,14 +10,22 @@ class DownloadController extends Controller
 {
     public $idEncoded;
     public $id;
+    public $isModel;
     public $model;
+    public $content;
 
     public function download( $idEncoded ){
         $this->idEncoded = $idEncoded;
         $this->decodeId();
         $this->checkExistsModel();
         $this->putContent();
-        return $this->redirectToFinish();
+
+        if( $this->isModel ){
+            $this->downloadFile();
+        }
+        else{
+            return $this->notFoundCDN();
+        }
     }
 
     public function decodeId(){
@@ -31,28 +39,34 @@ class DownloadController extends Controller
         }
         catch( Exception $e ){
             $this->isModel = false;
-            $this->notFound();
         }
     }
 
     public function searchModel(){
-        $this->model = UploadModel::findOrFail( $this->id );
-    }
-
-    public function notFound(){
-
+        $this->model = UploadModel::where( 'id', $this->id )->first();
     }
 
     public function putContent(){
         $this->content = $this->model->content;
     }
 
-    public function redirectToFinish(){
-        if( $this->isModel ){
-            return view( 'download', [ 'content' => $this->content ] );
+    public function downloadFile(){
+        $content = $this->content;
+            
+        if (!isset($_SERVER['HTTP_ACCEPT_ENCODING']) OR empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+            header('Content-Length: '. strlent( $content ));
         }
-        else{
-            return view( 'not-found-cdn' );
-        }
+        header('Content-Type: application/pdf');
+        header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
+        header('Pragma: public');
+        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
+        header( 'Content-Disposition: inline; filename="doc.pdf"' );
+    
+        echo( $content );
     }
+
+    public function notFoundCDN(){
+        return view( 'not-found-cdn' );
+    }
+    
 }
